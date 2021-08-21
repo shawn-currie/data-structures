@@ -1,10 +1,9 @@
 package com.company;
 
 
-import java.util.LinkedList;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class HashMap<K, V> implements Map<K, V>{
 
@@ -75,6 +74,42 @@ public class HashMap<K, V> implements Map<K, V>{
         }
         collisions.add(new Entry(key, value));
         size++;
+    }
+
+    @Override
+    public Set<K> keySet() {
+        Set<K> resultSet = new HashSet<>();
+        for(List<Entry> collisions: buckets) {
+            for(Entry entry: collisions) {
+                resultSet.add(entry.getKey());
+            }
+        }
+        return resultSet;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        for (Entry entry: buckets.get(getArrayIndex(key))) {
+            if (entry.getKey().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public V getOrDefault(K key, V defaultValue) {
+        for (Entry entry: buckets.get(getArrayIndex(key))) {
+            if (entry.getKey().equals(key)) {
+                return entry.getValue();
+            }
+        }
+        return defaultValue;
     }
 
     private void put(Entry entry) {
